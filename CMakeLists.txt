@@ -2,17 +2,19 @@
 project(sofia-sip-ua)
 cmake_minimum_required(VERSION 2.8)
 
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
+
 include(ExternalProject)
 
 include(cmake/PlatformSettings.cmake)
 include(cmake/ConfigureArtifactPath.cmake)
 include(cmake/CommonCompilerFlags.cmake)
 
-#message(STATUS ${OPENSSL_ROOT_DIR})
-#find_package(OpenSSL)
-#if (NOT OPENSSL_FOUND)
-#    message(FATAL_ERROR "Need OpenSSL to build soifa-sip-ua")
-#endif()
+message(STATUS ${OPENSSL_ROOT_DIR})
+find_package(OpenSSL)
+if (NOT OPENSSL_FOUND)
+    message(FATAL_ERROR "Need OpenSSL to build soifa-sip-ua")
+endif()
 
 if (UNIX)
 

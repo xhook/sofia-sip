@@ -14,25 +14,25 @@
 
 noinst_LTLIBRARIES = 	libsu.la
 
-bin_PROGRAMS = 		addrinfo localinfo
+#bin_PROGRAMS = 		addrinfo localinfo
 
-check_PROGRAMS = 	torture_su torture_su_port \
-			torture_su_alloc torture_su_time torture_su_tag \
-			test_htable test_htable2 torture_rbtree torture_heap \
-			test_memmem torture_su_bm \
-			torture_su_root torture_su_timer \
-			test_su su_proxy test_poll $(OSXPROGS)
+#check_PROGRAMS = 	torture_su torture_su_port \
+#			torture_su_alloc torture_su_time torture_su_tag \
+#			test_htable test_htable2 torture_rbtree torture_heap \
+#			test_memmem torture_su_bm \
+#			torture_su_root torture_su_timer \
+#			test_su su_proxy test_poll $(OSXPROGS)
 
 # ----------------------------------------------------------------------
 # Tests
 
-TESTS = 		torture_su torture_su_port \
-			torture_su_alloc torture_su_time torture_su_tag \
-			test_htable test_htable2 torture_rbtree torture_heap \
-			test_memmem torture_su_bm \
-			torture_su_root torture_su_timer \
-			run_addrinfo run_localinfo run_test_su \
-			$(OSXTESTS)
+#TESTS = 		torture_su torture_su_port \
+#			torture_su_alloc torture_su_time torture_su_tag \
+#			test_htable test_htable2 torture_rbtree torture_heap \
+#			test_memmem torture_su_bm \
+#			torture_su_root torture_su_timer \
+#			run_addrinfo run_localinfo run_test_su \
+#			$(OSXTESTS)
 
 # ----------------------------------------------------------------------
 # Rules for building the targets

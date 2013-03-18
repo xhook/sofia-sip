@@ -1,0 +1,22 @@
+#!/bin/bash
+
+${CMAKE_CURRENT_SOURCE_DIR}/autogen.sh &&
+CC="${CMAKE_C_COMPILER}" \
+LD="${CMAKE_LINKER}" \
+AR="${CMAKE_AR}" \
+AS="${CMAKE_ASM_COMPILER}" \
+NM="${CMAKE_NM}" \
+STRIP="${CMAKE_STRIP}" \
+RANLIB="${CMAKE_RANLIB}" \
+GPROF="${CMAKE_GPROF}" \
+CFLAGS="${SOFIA_SIP_CFLAGS} ${SOFIA_SIP_ANDROID_INCLUDES}" \
+LDFLAGS="${CMAKE_MODULE_LINKER_FLAGS} ${SOFIA_SIP_ANDROID_LIB_DIRS}" \
+${CMAKE_CURRENT_SOURCE_DIR}/configure \
+    --host=${SOFIA_SIP_TARGET_PLATFORM} \
+    --prefix=${CMAKE_CURRENT_BINARY_DIR}/out \
+    --without-glib \
+    --enable-static \
+    --disable-shared \
+    --disable-stun \
+    --disable-nth \
+    --with-openssl

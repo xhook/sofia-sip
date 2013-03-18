@@ -205,9 +205,29 @@ SOFIAPUBFUN issize_t msg_parse_next_field(su_home_t *home, msg_header_t *prev,
 #define MSG_STRING_E(p, e, s) do { \
   size_t _n = strlen(s); if (p + _n+1 < e) memcpy(p, s, _n+1); p+= _n; } while(0)
 
+#ifdef __ANDROID__
+	static void *OVERFLOW_SAFE_MEMCCPY(void *dest, const void *src, int c, size_t n)
+	{
+	  char *d;
+	  char const *s;
+
+	  if (!src || !dest)
+		return dest;
+
+	  for (d = dest, s = src; n-- > 0;) {
+		if (c == (*d++ = *s++))
+		  return d;
+	  }
+
+	  return NULL;
+	}
+#else
+	#define OVERFLOW_SAFE_MEMCCPY memccpy
+#endif //__ANDROID__
+
 /** Duplicate string. @HI */
 #define MSG_STRING_DUP(p, d, s) \
-  (void)((s)?((p)=(char*)memccpy((void *)((d)=(char*)p),(s),0,INT_MAX))\
+  (void)((s)?((p)=(char*)OVERFLOW_SAFE_MEMCCPY((void *)((d)=(char*)p),(s),0,INT_MAX))\
 	    :((d)=NULL))
 
 /* Solaris has broken memccpy - it considers last argument as signed */

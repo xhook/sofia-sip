@@ -432,7 +432,8 @@ int tport_tls_recv(tport_t *self)
     return 0;
   }
   else if (N == -1) {
-    if (su_is_blocking(su_errno())) {
+    if (su_is_blocking(su_errno()) ||
+        (tls_read_events(tlstp->tlstp_context) & (SU_WAIT_IN|SU_WAIT_OUT))) {
       tport_tls_set_events(self);
       return 1;
     }

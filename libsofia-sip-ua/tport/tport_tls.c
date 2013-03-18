@@ -87,6 +87,11 @@ static int once;
 
 #endif
 
+#ifdef _WIN32
+#include <windows.h>
+#endif //_WIN32
+
+
 #include "tport_tls.h"
 
 char const tls_version[] = OPENSSL_VERSION_TEXT;
@@ -859,6 +864,16 @@ int tls_events(tls_t const *tls, int mask)
     ((mask & SU_WAIT_OUT) ? tls->write_events : 0);
 }
 
+int tls_read_events(tls_t const *tls)
+{
+  return tls->read_events;
+}
+
+int tls_write_events(tls_t const *tls)
+{
+  return tls->write_events;
+}
+
 int tls_connect(su_root_magic_t *magic, su_wait_t *w, tport_t *self)
 {
   tport_master_t *mr = self->tp_master;
@@ -957,10 +972,30 @@ int tls_connect(su_root_magic_t *magic, su_wait_t *w, tport_t *self)
 
       default:
         {
+#ifdef _WIN32
+		char errbuf[64];
+		LPVOID lpMsgBuf;
+		DWORD err = GetLastError();
+
+		FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
+		FORMAT_MESSAGE_IGNORE_INSERTS, NULL, err,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&lpMsgBuf, 0, NULL);
+
+		ERR_error_string_n(status, errbuf, 64);
+        SU_DEBUG_3(("%s(%p): TLS setup failed (%s) \n",
+		    __func__, (void *)self, errbuf));		
+
+		SU_DEBUG_3(("%s(%p): TLS setup failed details: (%s)\n",
+		    __func__, (void *)self, (char*) lpMsgBuf ));		
+
+		LocalFree(lpMsgBuf);
+		  
+#else
 	  char errbuf[64];
 	  ERR_error_string_n(status, errbuf, 64);
           SU_DEBUG_3(("%s(%p): TLS setup failed (%s)\n",
 		    __func__, (void *)self, errbuf));
+#endif
         }
         break;
     }

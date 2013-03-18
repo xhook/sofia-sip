@@ -46,8 +46,12 @@
 #include "sofia-sip/su_os_nw.h"
 #include "sofia-sip/su_debug.h"
 
-#if defined(__APPLE_CC__)
-# define SU_NW_CHANGE_PTHREAD 1
+#if defined(__APPLE__)
+# include "TargetConditionals.h"
+# if defined(TARGET_OS_MAC) && !defined(TARGET_OS_IPHONE) && !defined(TARGET_IPHONE_SIMULATOR)
+#  define SU_NW_CHANGE_PTHREAD 1
+#  define UNISON_OS_MAC 1
+# endif
 #endif
 
 #if defined (SU_NW_CHANGE_PTHREAD)
@@ -55,20 +59,20 @@
 # include <pthread.h>
 #endif
 
-#if defined(__APPLE_CC__)
+#if defined(UNISON_OS_MAC)
 #include <AvailabilityMacros.h>
 #include <sys/cdefs.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <SystemConfiguration/SCDynamicStore.h>
 #include <SystemConfiguration/SCDynamicStoreKey.h>
 #include <SystemConfiguration/SCSchemaDefinitions.h>
-#endif /* __APPLE_CC__ */
+#endif /* UNISON_OS_MAC */
 
 struct su_network_changed_s {
   su_root_t                  *su_root;
   su_home_t                  *su_home;
 
-#if defined (__APPLE_CC__)
+#if defined (UNISON_OS_MAC)
   SCDynamicStoreRef           su_storeRef[1];
   CFRunLoopSourceRef          su_sourceRef[1];
 #endif
@@ -80,7 +84,7 @@ struct su_network_changed_s {
   su_network_changed_magic_t *su_network_changed_magic;
 };
 
-#if defined(__APPLE_CC__)
+#if defined(UNISON_OS_MAC)
 static void su_nw_changed_msg_recv(su_root_magic_t *rm,
 				   su_msg_r msg,
 				   su_network_changed_t *snc)
